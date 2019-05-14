@@ -1,6 +1,6 @@
 package com.fanwei.netty.server;
 
-import com.fanwei.netty.handler.FirstServerHandler;
+import com.fanwei.netty.handler.*;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -33,7 +33,15 @@ public class NettyServer {
                     protected void initChannel(NioSocketChannel ch) {
                         //这个处理器的作用就是负责读取客户端来的数据
 //                        ch.pipeline().addLast(new FirstServerHandler());
-                        ch.pipeline().addLast(new ServerHandler());
+                        ch.pipeline().addLast(new InboundHandlerA());
+                        ch.pipeline().addLast(new InboundHandlerB());
+                        ch.pipeline().addLast(new InboundHandlerC());
+
+                        ch.pipeline().addLast(new OutboundHandlerA());
+                        ch.pipeline().addLast(new OutboundHandlerB());
+                        ch.pipeline().addLast(new OutboundHandlerC());
+
+
                     }
                 });
 

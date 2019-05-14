@@ -43,25 +43,19 @@ public class NettyClient {
                 .handler(new ChannelInitializer<SocketChannel>() {
                     @Override
                     protected void initChannel(SocketChannel ch) throws Exception {
-//                        ch.pipeline().addLast(new FirstClientHandler());
                         ch.pipeline().addLast(new ClientHandler());
                     }
                 });
 
         connect(bootstrap,HOST,PORT,MAX_RETRY);
 
-//        while (true) {
-//            channel.writeAndFlush(System.currentTimeMillis() + ": hello world!");
-//            Thread.sleep(2000);
-//        }
     }
 
     private static void connect(Bootstrap bootstrap,String host,Integer port,Integer retry){
         bootstrap.connect(host,port).addListener(future -> {
             if (future.isSuccess()){
-                System.out.println("链接成功！");
-                Channel channel = ((ChannelFuture)future).channel();
-                //这里通过多线程插入数据
+                System.out.println(new Date() + ": 连接成功，启动控制台线程……");
+                Channel channel = ((ChannelFuture) future).channel();
                 startConsoleThread(channel);
             }else if (retry == 0){
                 System.err.println("重试次数已用完，放弃连接！");
