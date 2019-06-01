@@ -43,7 +43,7 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
                 loginResponsePacket.setSuccess(false);
             }
             //编码
-            ByteBuf responseBuf = PacketCodeC.INSTANCE.encode(ctx.alloc(),loginResponsePacket);
+            ByteBuf responseBuf = PacketCodeC.INSTANCE.encode(ctx.alloc().ioBuffer(),loginResponsePacket);
             ctx.channel().writeAndFlush(responseBuf);
         }else if (packet instanceof MessageRequestPacket){
             //强转MessageRequestPacket
@@ -52,7 +52,7 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
             MessageResponsePacket responsePacket = new MessageResponsePacket();
             System.out.println(new Date() + ": 收到客户端消息：" + messageRequestPacket.getMessage());
             responsePacket.setMessage("服务端回复【" + messageRequestPacket.getMessage() + "】");
-            ByteBuf responseByte = PacketCodeC.INSTANCE.encode(ctx.alloc(),responsePacket);
+            ByteBuf responseByte = PacketCodeC.INSTANCE.encode(ctx.alloc().ioBuffer(),responsePacket);
             ctx.channel().writeAndFlush(responseByte);
         }
     }

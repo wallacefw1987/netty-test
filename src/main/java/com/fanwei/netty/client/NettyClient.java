@@ -1,9 +1,13 @@
 package com.fanwei.netty.client;
 
-import com.fanwei.netty.handler.FirstClientHandler;
+import com.fanwei.netty.client.handler.LoginResponseHandler;
+import com.fanwei.netty.client.handler.MessageResponseHandler;
+import com.fanwei.netty.codec.PacketDecoder;
+import com.fanwei.netty.codec.PacketEncoder;
 import com.fanwei.netty.protocol.PacketCodeC;
 import com.fanwei.netty.protocol.request.MessageRequestPacket;
-import com.fanwei.netty.protocol.response.MessageResponsePacket;
+import com.fanwei.netty.server.handler.LoginRequestHandler;
+import com.fanwei.netty.server.handler.MessageRequestHandler;
 import com.fanwei.netty.utils.LoginUtil;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
@@ -43,7 +47,10 @@ public class NettyClient {
                 .handler(new ChannelInitializer<SocketChannel>() {
                     @Override
                     protected void initChannel(SocketChannel ch) throws Exception {
-                        ch.pipeline().addLast(new ClientHandler());
+                        ch.pipeline().addLast(new PacketDecoder());
+                        ch.pipeline().addLast(new LoginResponseHandler());
+                        ch.pipeline().addLast(new MessageResponseHandler());
+                        ch.pipeline().addLast(new PacketEncoder());
                     }
                 });
 
@@ -80,7 +87,7 @@ public class NettyClient {
                     MessageRequestPacket packet = new MessageRequestPacket();
                     packet.setMessage(line);
 
-                    ByteBuf byteBuf = PacketCodeC.INSTANCE.encode(channel.alloc(),packet);
+                    ByteBuf byteBuf = PacketCodeC.INSTANCE.encode(channel.alloc().ioBuffer(),packet);
                     channel.writeAndFlush(byteBuf);
                 }
             }

@@ -4,10 +4,8 @@ import com.fanwei.netty.protocol.Packet;
 import com.fanwei.netty.protocol.PacketCodeC;
 import com.fanwei.netty.protocol.request.LoginRequestPacket;
 import com.fanwei.netty.protocol.response.LoginResponsePacket;
-import com.fanwei.netty.protocol.response.MessageResponsePacket;
 import com.fanwei.netty.utils.LoginUtil;
 import io.netty.buffer.ByteBuf;
-import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 
@@ -33,7 +31,7 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
         loginRequestPacket.setPassword("123456");
 
         // 编码
-        ByteBuf byteBuf = PacketCodeC.INSTANCE.encode(ctx.alloc(),loginRequestPacket);
+        ByteBuf byteBuf = PacketCodeC.INSTANCE.encode(ctx.alloc().ioBuffer(),loginRequestPacket);
 
         // 写数据
         ctx.channel().writeAndFlush(byteBuf);

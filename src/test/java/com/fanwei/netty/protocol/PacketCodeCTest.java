@@ -30,7 +30,7 @@ public class PacketCodeCTest {
         loginRequestPacket.setPassword("123456");
 
         PacketCodeC packetCodeC = PacketCodeC.INSTANCE;
-        ByteBuf byteBuf = packetCodeC.encode(ByteBufAllocator.DEFAULT,loginRequestPacket);
+        ByteBuf byteBuf = packetCodeC.encode(ByteBufAllocator.DEFAULT.ioBuffer(),loginRequestPacket);
         Packet decodePacket = packetCodeC.decode(byteBuf);
 
         Assert.assertArrayEquals(serializer.serialize(loginRequestPacket),serializer.serialize(decodePacket));
